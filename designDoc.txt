@@ -1,4 +1,4 @@
-input - File, passowrd of 1 byte
+input - File, passowrd of 8 byte
 Output - Encrypted file
 
 Algorithm
