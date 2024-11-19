@@ -1,11 +1,10 @@
-def encrypt_file(input_file, password, output_file):
+def encrypt_file_inplace(file_path, password):
     """
-    Encrypts the content of the input file using an 8-byte password
-    and saves it to the output file.
+    Encrypts the content of the given file using an 8-byte password
+    and saves the changes directly to the same file.
 
-    :param input_file: Path to the input file to be encrypted
+    :param file_path: Path to the file to be encrypted
     :param password: 8-byte password for encryption
-    :param output_file: Path to save the encrypted file
     """
     if len(password) != 8:
         raise ValueError("Password must be exactly 8 bytes.")
@@ -13,23 +12,37 @@ def encrypt_file(input_file, password, output_file):
     password_bytes = password.encode('utf-8')  # Convert password to bytes
 
     try:
-        with open(input_file, 'rb') as infile, open(output_file, 'wb') as outfile:
-            while chunk := infile.read(8):  # Read file in 8-byte blocks
+        with open(file_path, 'rb+') as file:  # Open file for reading and writing in binary mode
+            file_content = file.read()  # Read the entire content of the file
+
+            # Process the content in 8-byte blocks
+            encrypted_content = bytearray()
+            for i in range(0, len(file_content), 8):
+                chunk = file_content[i:i+8]
+                
+                # Pad the block to 8 bytes if it's shorter
+                # if len(chunk) < 8:
+                #     chunk = chunk.ljust(8, b'\0')
+                
                 # XOR the block with the password
                 encrypted_block = bytes([b ^ p for b, p in zip(chunk, password_bytes)])
-                outfile.write(encrypted_block)  # Write the encrypted block to the output file
+                encrypted_content.extend(encrypted_block)
 
-        print(f"File encrypted successfully and saved as {output_file}")
+            # Go back to the start of the file and overwrite it with encrypted content
+            file.seek(0)
+            file.write(encrypted_content)
+            file.truncate()  # Ensure no leftover data remains
+
+        print(f"File encrypted successfully in-place at {file_path}")
     except FileNotFoundError:
-        print(f"Error: File '{input_file}' not found.")
+        print(f"Error: File '{file_path}' not found.")
     except Exception as e:
         print(f"An error occurred: {e}")
 
 
 # Example usage
 if __name__ == "__main__":
-    input_file = "Testing\\img2.png"       # Replace with the path to your input file
+    file_path = "Testing\\img2.png"  # Replace with the path to your file
     password = "password"           # Replace with your 8-byte password
-    output_file = "Testing\\img2.png"   # Replace with the desired output file path
 
-    encrypt_file(input_file, password, output_file)
+    encrypt_file_inplace(file_path, password)
