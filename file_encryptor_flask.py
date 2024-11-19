@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, send_file, redirect, url_for
+from flask import Flask, render_template, request, send_file
 import os
 
 app = Flask(__name__)
@@ -75,16 +75,10 @@ def index():
         except Exception as e:
             return str(e), 500
 
-        # Provide download link
-        return redirect(url_for("download", filename=output_file_name))
+        # Send file directly for download with the option to save it
+        return send_file(output_file_path, as_attachment=True, download_name=output_file_name)
 
     return render_template("index.html")
-
-
-@app.route("/download/<filename>")
-def download(filename):
-    file_path = os.path.join(OUTPUT_FOLDER, filename)
-    return send_file(file_path, as_attachment=True)
 
 
 if __name__ == "__main__":
