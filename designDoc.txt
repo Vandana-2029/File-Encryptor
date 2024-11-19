@@ -1,0 +1,10 @@
+input - File, passowrd of 1 byte
+Output - Encrypted file
+
+Algorithm
+---------
+Take file as input
+Divide that file into 8-byte blocks
+Take each block and xor with the password
+Combine all 8byte blocks to generate Encrypted file
+save the encrypted file as output file
