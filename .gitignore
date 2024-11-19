@@ -1,1 +1,5 @@
 Testing/
+uploads/*
+!upload/.gitkeep
+output/*
+!output/.gitkeep
