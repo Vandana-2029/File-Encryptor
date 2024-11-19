@@ -9,10 +9,11 @@ def encrypt_file_inplace(input_file_path, output_file_path, password):
     :param output_file_path: Output file path
     :param password: 8-byte password for encryption
     """
-    if len(password) != 8:
-        raise ValueError("Password must be exactly 8 bytes.")
+    if len(password) > 8:
+        raise ValueError("Password must be 8 bytes or less.")
     
-    password_bytes = password.encode('utf-8')  # Convert password to bytes
+    # Pad the password to 8 bytes if it's shorter
+    password_bytes = password.encode('utf-8').ljust(8, b'\0')
 
     try:
         # Read the original file content
