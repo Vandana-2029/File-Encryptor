@@ -1,3 +1,5 @@
+import sys
+
 def encrypt_file_inplace(input_file_path, output_file_path, password):
     """
     Encrypts the content of the file using an 8-byte password
@@ -35,10 +37,17 @@ def encrypt_file_inplace(input_file_path, output_file_path, password):
         print(f"An error occurred: {e}")
 
 
-# Example usage
 if __name__ == "__main__":
-    input_file_path = "Testing\\img3.png"
-    output_file_path = "Testing\\img4.png"
-    password = "password"           # Replace with your 8-byte password
+    if len(sys.argv) != 4:
+        print("Usage: python script_name.py <input_file_path> <output_file_path> <password>")
+        sys.exit(1)
 
-    encrypt_file_inplace(input_file_path, output_file_path, password)
+    input_file_path = sys.argv[1]
+    output_file_path = sys.argv[2]
+    password = sys.argv[3]
+
+    try:
+        encrypt_file_inplace(input_file_path, output_file_path, password)
+    except ValueError as e:
+        print(e)
+        sys.exit(1)
